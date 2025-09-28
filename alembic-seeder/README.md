@@ -421,16 +421,45 @@ def _get_metadata(cls):
 
 ## 📝 Best Practices
 
-1. **Use Environment-Specific Seeders**: Separate development, testing, and production data
-2. **Implement Rollback**: Always implement rollback for production seeders
-3. **Set Dependencies**: Use dependencies to ensure correct execution order
-4. **Batch Large Operations**: Process large datasets in batches
-5. **Use Transactions**: Let the manager handle commits/rollbacks
-6. **Tag Seeders**: Use tags to group related seeders
-7. **Document Seeders**: Add clear descriptions to your seeders
-8. **Test Seeders**: Test seeders in development before production
-9. **Version Control**: Keep seeders in version control
-10. **Monitor Execution**: Check status and logs regularly
+1. **One seeder per table**: structure seeders so that each table has its own seeder.
+2. **Idempotent by default**: use the built-in helpers `upsert`, `bulk_upsert`, `get_or_create` to ensure safe reruns.
+3. **Use a business key**: pick a stable unique key (e.g. `email`, `slug`, `(user_id, role_id)`) and add a unique constraint in your DB.
+4. **Environment-specific seeders**: separate development, testing, and production data.
+5. **Implement rollback**: always implement rollback for production seeders.
+6. **Set dependencies**: use dependencies to ensure correct execution order.
+7. **Batch large operations**: process large datasets in batches.
+8. **Use transactions**: the manager handles commits/rollbacks around each seeder.
+9. **Tag seeders**: group related seeders with tags.
+10. **Document seeders**: add clear descriptions to your seeders.
+11. **Test seeders**: test in development before production.
+12. **Monitor execution**: check status and logs regularly.
+
+### Idempotence helpers
+
+`BaseSeeder` exposes helpers to make idempotent seeding trivial:
+
+```python
+result = self.get_or_create(Model, where={"code": "books"}, defaults={"label": "Books"})
+
+result = self.upsert(
+    model=Category,
+    where={"slug": "books"},
+    values={"name": "Books", "is_active": True},
+    update_existing=True,
+)
+
+stats = self.bulk_upsert(
+    model=Category,
+    rows=[
+        {"slug": "electronics", "name": "Electronics"},
+        {"slug": "books", "name": "Books"},
+    ],
+    key_fields=["slug"],
+    update_fields=["name"],
+)
+```
+
+These helpers increment `records_affected` for created rows (and, optionally, updated rows) and `flush()` changes for consistency.
 
 ## 🤝 Contributing
 

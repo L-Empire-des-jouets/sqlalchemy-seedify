@@ -11,7 +11,7 @@ from alembic_seeder.core.seeder_registry import SeederRegistry
 from alembic_seeder.tracking.tracker import SeederTracker
 from alembic_seeder.utils.environment import EnvironmentManager
 
-__version__ = "1.0.0"
+__version__ = "1.1.0"
 
 __all__ = [
     "BaseSeeder",

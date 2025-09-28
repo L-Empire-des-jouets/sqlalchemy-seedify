@@ -23,22 +23,18 @@ class RoleSeeder(BaseSeeder):
     def run(self):
         """Create default roles."""
         from myapp.models import Role
-        
-        roles = [
-            Role(name="admin", description="Administrator with full access"),
-            Role(name="moderator", description="Content moderator"),
-            Role(name="user", description="Regular user"),
-            Role(name="guest", description="Guest user with limited access"),
+        rows = [
+            {"name": "admin", "description": "Administrator with full access"},
+            {"name": "moderator", "description": "Content moderator"},
+            {"name": "user", "description": "Regular user"},
+            {"name": "guest", "description": "Guest user with limited access"},
         ]
-        
-        for role in roles:
-            # Check if role already exists
-            existing = self.session.query(Role).filter_by(name=role.name).first()
-            if not existing:
-                self.session.add(role)
-                self._records_affected += 1
-        
-        self.session.flush()
+        self.bulk_upsert(
+            model=Role,
+            rows=rows,
+            key_fields=["name"],
+            update_fields=["description"],
+        )
     
     def rollback(self):
         """Remove seeded roles."""
@@ -76,46 +72,42 @@ class UserSeeder(BaseSeeder):
         admin_role = self.session.query(Role).filter_by(name="admin").first()
         user_role = self.session.query(Role).filter_by(name="user").first()
         
-        users = [
+        rows = [
             {
                 "username": "admin",
                 "email": "admin@example.com",
-                "password": "hashed_password_here",  # Use proper password hashing!
-                "role": admin_role,
+                "password": "hashed_password_here",
                 "is_active": True,
             },
             {
                 "username": "john_doe",
                 "email": "john@example.com",
                 "password": "hashed_password_here",
-                "role": user_role,
                 "is_active": True,
             },
             {
                 "username": "jane_smith",
                 "email": "jane@example.com",
                 "password": "hashed_password_here",
-                "role": user_role,
                 "is_active": True,
             },
         ]
-        
-        for user_data in users:
-            user = User(
-                username=user_data["username"],
-                email=user_data["email"],
-                password=user_data["password"],
-                is_active=user_data["is_active"],
-                created_at=datetime.utcnow(),
-            )
-            user.role = user_data["role"]
-            
-            # Check if user already exists
-            existing = self.session.query(User).filter_by(email=user.email).first()
-            if not existing:
-                self.session.add(user)
-                self._records_affected += 1
-        
+        # Upsert users by unique email, update username/is_active; set role separately
+        from sqlalchemy.orm import joinedload
+        self.bulk_upsert(
+            model=User,
+            rows=rows,
+            key_fields=["email"],
+            update_fields=["username", "is_active", "password"],
+        )
+        # Assign roles idempotently via upsert on relation table if applicable
+        # If using simple FK role_id on User
+        for row in rows:
+            user = self.session.query(User).filter_by(email=row["email"]).first()
+            if user and user_role and admin_role:
+                target_role = admin_role if row["email"] == "admin@example.com" else user_role
+                if getattr(user, "role_id", None) != getattr(target_role, "id", None):
+                    user.role = target_role
         self.session.flush()
     
     def rollback(self):
@@ -149,42 +141,32 @@ class CategorySeeder(BaseSeeder):
     def run(self):
         """Create product categories."""
         from myapp.models import Category
-        
         categories = [
-            {"name": "Electronics", "slug": "electronics", "parent": None},
-            {"name": "Books", "slug": "books", "parent": None},
-            {"name": "Clothing", "slug": "clothing", "parent": None},
-            {"name": "Home & Garden", "slug": "home-garden", "parent": None},
-            {"name": "Sports", "slug": "sports", "parent": None},
+            {"name": "Electronics", "slug": "electronics", "description": "Products in Electronics category", "is_active": True},
+            {"name": "Books", "slug": "books", "description": "Products in Books category", "is_active": True},
+            {"name": "Clothing", "slug": "clothing", "description": "Products in Clothing category", "is_active": True},
+            {"name": "Home & Garden", "slug": "home-garden", "description": "Products in Home & Garden category", "is_active": True},
+            {"name": "Sports", "slug": "sports", "description": "Products in Sports category", "is_active": True},
         ]
-        
-        # Create main categories
-        for cat_data in categories:
-            category = Category(
-                name=cat_data["name"],
-                slug=cat_data["slug"],
-                description=f"Products in {cat_data['name']} category",
-                is_active=True,
-            )
-            self.session.add(category)
-            self._records_affected += 1
-        
-        self.session.flush()
-        
-        # Create subcategories
+        self.bulk_upsert(
+            model=Category,
+            rows=categories,
+            key_fields=["slug"],
+            update_fields=["name", "description", "is_active"],
+        )
         electronics = self.session.query(Category).filter_by(slug="electronics").first()
         if electronics:
             subcategories = [
-                Category(name="Laptops", slug="laptops", parent_id=electronics.id),
-                Category(name="Smartphones", slug="smartphones", parent_id=electronics.id),
-                Category(name="Tablets", slug="tablets", parent_id=electronics.id),
+                {"name": "Laptops", "slug": "laptops", "parent_id": electronics.id},
+                {"name": "Smartphones", "slug": "smartphones", "parent_id": electronics.id},
+                {"name": "Tablets", "slug": "tablets", "parent_id": electronics.id},
             ]
-            
-            for subcat in subcategories:
-                self.session.add(subcat)
-                self._records_affected += 1
-        
-        self.session.flush()
+            self.bulk_upsert(
+                model=Category,
+                rows=subcategories,
+                key_fields=["slug"],
+                update_fields=["name", "parent_id"],
+            )
     
     def rollback(self):
         """Remove seeded categories."""
@@ -224,7 +206,6 @@ class SettingsSeeder(BaseSeeder):
     def run(self):
         """Create default application settings."""
         from myapp.models import Setting
-        
         settings = [
             # General settings
             {"key": "app_name", "value": "My Application", "type": "string"},
@@ -246,25 +227,20 @@ class SettingsSeeder(BaseSeeder):
             {"key": "rate_limit_window", "value": "3600", "type": "integer"},
         ]
         
-        for setting_data in settings:
-            setting = Setting(
-                key=setting_data["key"],
-                value=setting_data["value"],
-                type=setting_data["type"],
-                description=f"Setting for {setting_data['key'].replace('_', ' ')}",
-            )
-            
-            # Check if setting already exists
-            existing = self.session.query(Setting).filter_by(key=setting.key).first()
-            if not existing:
-                self.session.add(setting)
-                self._records_affected += 1
-            else:
-                # Update existing setting
-                existing.value = setting.value
-                existing.type = setting.type
-        
-        self.session.flush()
+        rows = []
+        for s in settings:
+            rows.append({
+                "key": s["key"],
+                "value": s["value"],
+                "type": s["type"],
+                "description": f"Setting for {s['key'].replace('_', ' ')}",
+            })
+        self.bulk_upsert(
+            model=Setting,
+            rows=rows,
+            key_fields=["key"],
+            update_fields=["value", "type", "description"],
+        )
     
     def rollback(self):
         """Remove seeded settings."""
