@@ -1,4 +1,4 @@
-"""Commands for alembic-seeder CLI."""
+"""Commands for sqlalchemy-seedify CLI."""
 
 from . import init_command
 from . import make_command

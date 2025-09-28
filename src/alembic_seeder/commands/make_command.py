@@ -295,6 +295,6 @@ def create_seeder(
     console.print("2. Implement the run() method")
     if with_rollback:
         console.print("3. Implement the rollback() method")
-    console.print(f"{3 if not with_rollback else 4}. Run the seeder: alembic-seeder run --seeder {name}")
+    console.print(f"{3 if not with_rollback else 4}. Run the seeder: sqlalchemy-seedify run --seeder {name}")
     
     return file_path

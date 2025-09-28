@@ -1,5 +1,5 @@
 """
-Configuration management for alembic-seeder.
+Configuration management for sqlalchemy-seedify.
 """
 
 import os
@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 
 
 class SeederConfig(BaseModel):
-    """Main configuration for alembic-seeder."""
+    """Main configuration for sqlalchemy-seedify."""
     
     # Database configuration
     database_url: Optional[str] = None
@@ -55,7 +55,7 @@ class SeederConfig(BaseModel):
 
 class Config:
     """
-    Configuration manager for alembic-seeder.
+    Configuration manager for sqlalchemy-seedify.
     
     This class handles loading and managing configuration from various sources:
     - Environment variables

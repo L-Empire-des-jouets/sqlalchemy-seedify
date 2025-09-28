@@ -1,4 +1,4 @@
-"""Core components of the alembic-seeder package."""
+"""Core components of the sqlalchemy-seedify package."""
 
 from .base_seeder import BaseSeeder
 from .seeder_manager import SeederManager

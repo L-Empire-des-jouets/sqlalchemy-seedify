@@ -1,5 +1,5 @@
 """
-Example of integrating alembic-seeder with a FastAPI application.
+Example of integrating sqlalchemy-seedify with a FastAPI application.
 """
 
 from contextlib import asynccontextmanager

@@ -31,8 +31,8 @@ By participating in this project, you agree to abide by our Code of Conduct. Ple
 
 1. Fork the repository:
 ```bash
-git clone https://github.com/yourusername/alembic-seeder.git
-cd alembic-seeder
+git clone https://github.com/L-Empire-des-jouets/sqlalchemy-seedifyr.git
+cd sqlalchemy-seedify
 ```
 
 2. Create a virtual environment:
@@ -267,9 +267,9 @@ stats.print_stats()
 
 ## Getting Help
 
-- 💬 [GitHub Discussions](https://github.com/alembic-seeder/alembic-seeder/discussions)
-- 🐛 [Issue Tracker](https://github.com/alembic-seeder/alembic-seeder/issues)
-- 📧 Email: contribute@alembic-seeder.dev
+- 💬 [GitHub Discussions](https://github.com/sqlalchemy-seedify/sqlalchemy-seedify/discussions)
+- 🐛 [Issue Tracker](https://github.com/sqlalchemy-seedify/sqlalchemy-seedify/issues)
+- 📧 Email: contribute@sqlalchemy-seedify.dev
 
 ## Recognition
 

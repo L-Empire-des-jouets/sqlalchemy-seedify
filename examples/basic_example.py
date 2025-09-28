@@ -1,5 +1,5 @@
 """
-Basic example of using alembic-seeder.
+Basic example of using sqlalchemy-seedify.
 """
 
 from datetime import datetime

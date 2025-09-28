@@ -1,5 +1,5 @@
 """
-Setup script for alembic-seeder.
+Setup script for sqlalchemy-seedify.
 
 This file is provided for backward compatibility with older pip versions.
 The package configuration is primarily defined in pyproject.toml.

@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "alembic-seeder"
+name = "sqlalchemy-seedify"
 version = "1.1.0"
 description = "A comprehensive seeder system for Alembic and SQLAlchemy, inspired by Laravel seeders"
 readme = "README.md"
@@ -11,7 +11,7 @@ requires-python = ">=3.8"
 license = "MIT"
 keywords = ["alembic", "sqlalchemy", "seeder", "database", "migration", "seed"]
 authors = [
-    { name = "Alembic Seeder Contributors", email = "contact@alembic-seeder.dev" }
+    { name = "Alembic Seeder Contributors", email = "contact@sqlalchemy-seedify.dev" }
 ]
 classifiers = [
     "Development Status :: 4 - Beta",
@@ -52,12 +52,12 @@ docs = [
 ]
 
 [project.urls]
-Documentation = "https://github.com/alembic-seeder/alembic-seeder#readme"
-Issues = "https://github.com/alembic-seeder/alembic-seeder/issues"
-Source = "https://github.com/alembic-seeder/alembic-seeder"
+Documentation = "https://github.com/sqlalchemy-seedify/sqlalchemy-seedify#readme"
+Issues = "https://github.com/sqlalchemy-seedify/sqlalchemy-seedify/issues"
+Source = "https://github.com/sqlalchemy-seedify/sqlalchemy-seedify"
 
 [project.scripts]
-alembic-seeder = "alembic_seeder.cli:main"
+sqlalchemy-seedify = "alembic_seeder.cli:main"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/alembic_seeder"]

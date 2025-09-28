@@ -24,19 +24,19 @@ A comprehensive seeder system for Alembic and SQLAlchemy, inspired by Laravel's 
 ### Using pip
 
 ```bash
-pip install alembic-seeder
+pip install L-Empire-des-jouets
 ```
 
 ### Using UV (recommended)
 
 ```bash
-uv add alembic-seeder
+uv add sqlalchemy-seedify
 ```
 
 ### With Alembic integration
 
 ```bash
-uv add alembic-seeder[alembic]
+uv add sqlalchemy-seedify[alembic]
 ```
 
 ## 🚀 Quick Start
@@ -44,7 +44,7 @@ uv add alembic-seeder[alembic]
 ### 1. Initialize in your project
 
 ```bash
-alembic-seeder init
+sqlalchemy-seedify init
 ```
 
 This will:
@@ -56,7 +56,7 @@ This will:
 ### 2. Create your first seeder
 
 ```bash
-alembic-seeder make UserSeeder
+sqlalchemy-seedify make UserSeeder
 ```
 
 ### 3. Edit the seeder
@@ -103,13 +103,13 @@ class UserSeeder(BaseSeeder):
 
 ```bash
 # Run all seeders
-alembic-seeder run
+sqlalchemy-seedify run
 
 # Run specific seeder
-alembic-seeder run --seeder UserSeeder
+sqlalchemy-seedify run --seeder UserSeeder
 
 # Dry run to preview
-alembic-seeder run --dry-run
+sqlalchemy-seedify run --dry-run
 ```
 
 ## 📖 Documentation
@@ -158,7 +158,7 @@ Set the current environment:
 export ENVIRONMENT="production"
 
 # Via CLI option
-alembic-seeder run --env production
+sqlalchemy-seedify run --env production
 ```
 
 ### Dependencies
@@ -180,76 +180,76 @@ The system automatically resolves dependencies and determines the correct execut
 
 #### Initialize
 ```bash
-alembic-seeder init
+sqlalchemy-seedify init
 ```
 
 #### Create Seeders
 ```bash
 # Basic seeder
-alembic-seeder make MySeeder
+sqlalchemy-seedify make MySeeder
 
 # With Faker template
-alembic-seeder make UserSeeder --template faker
+sqlalchemy-seedify make UserSeeder --template faker
 
 # With rollback support
-alembic-seeder make ProductSeeder --rollback
+sqlalchemy-seedify make ProductSeeder --rollback
 
 # For specific environments
-alembic-seeder make TestSeeder --env testing --env development
+sqlalchemy-seedify make TestSeeder --env testing --env development
 ```
 
 #### Run Seeders
 ```bash
 # Run all pending seeders
-alembic-seeder run
+sqlalchemy-seedify run
 
 # Run specific seeders
-alembic-seeder run --seeder UserSeeder --seeder ProductSeeder
+sqlalchemy-seedify run --seeder UserSeeder --seeder ProductSeeder
 
 # Force re-run
-alembic-seeder run --force
+sqlalchemy-seedify run --force
 
 # Fresh run (clear tracking, then run all)
-alembic-seeder run --fresh
+sqlalchemy-seedify run --fresh
 
 # Dry run
-alembic-seeder run --dry-run
+sqlalchemy-seedify run --dry-run
 
 # Run by tag
-alembic-seeder run --tag essential --tag test-data
+sqlalchemy-seedify run --tag essential --tag test-data
 ```
 
 #### Rollback
 ```bash
 # Rollback specific seeders
-alembic-seeder rollback --seeder UserSeeder
+sqlalchemy-seedify rollback --seeder UserSeeder
 
 # Rollback last batch
-alembic-seeder rollback --batch 1
+sqlalchemy-seedify rollback --batch 1
 
 # Rollback all
-alembic-seeder rollback --all
+sqlalchemy-seedify rollback --all
 ```
 
 #### Status and Information
 ```bash
 # Check status
-alembic-seeder status
+sqlalchemy-seedify status
 
 # Detailed status
-alembic-seeder status --detailed
+sqlalchemy-seedify status --detailed
 
 # List all seeders
-alembic-seeder list
+sqlalchemy-seedify list
 ```
 
 #### Refresh (Rollback + Run)
 ```bash
 # Refresh all seeders
-alembic-seeder refresh
+sqlalchemy-seedify refresh
 
 # Dry run refresh
-alembic-seeder refresh --dry-run
+sqlalchemy-seedify refresh --dry-run
 ```
 
 ## 🎯 Advanced Usage
@@ -260,13 +260,13 @@ Create seeders with different templates:
 
 ```bash
 # Faker template for test data
-alembic-seeder make FakeUserSeeder --template faker
+sqlalchemy-seedify make FakeUserSeeder --template faker
 
 # Factory pattern template
-alembic-seeder make UserFactory --template factory
+sqlalchemy-seedify make UserFactory --template factory
 
 # Relational data template
-alembic-seeder make UserProfileSeeder --template relation
+sqlalchemy-seedify make UserProfileSeeder --template relation
 ```
 
 ### Batch Processing
@@ -342,10 +342,10 @@ target_metadata = [Base.metadata, SeederBase.metadata]
 
 ```bash
 # Run migrations and seeders together
-alembic upgrade head && alembic-seeder run
+alembic upgrade head && sqlalchemy-seedify run
 
 # Rollback migrations and seeders
-alembic-seeder rollback --all && alembic downgrade -1
+sqlalchemy-seedify rollback --all && alembic downgrade -1
 ```
 
 ## 🏗️ Architecture
@@ -391,13 +391,13 @@ def _get_metadata(cls):
 export ENVIRONMENT=testing
 
 # Run test seeders
-alembic-seeder run --tag test-data
+sqlalchemy-seedify run --tag test-data
 
 # Run your tests
 pytest
 
 # Clean up
-alembic-seeder rollback --all
+sqlalchemy-seedify rollback --all
 ```
 
 ## 🔒 Production Safety
@@ -407,7 +407,7 @@ alembic-seeder rollback --all
 Production operations require confirmation by default:
 
 ```bash
-$ alembic-seeder run --env production
+$ sqlalchemy-seedify run --env production
 ⚠️  You are about to run seeders in PRODUCTION. Continue? [y/N]:
 ```
 
@@ -482,9 +482,9 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📞 Support
 
-- 📧 Email: support@alembic-seeder.dev
-- 🐛 Issues: [GitHub Issues](https://github.com/alembic-seeder/alembic-seeder/issues)
-- 💬 Discussions: [GitHub Discussions](https://github.com/alembic-seeder/alembic-seeder/discussions)
+- 📧 Email: support@sqlalchemy-seedify.dev
+- 🐛 Issues: [GitHub Issues](https://github.com/sqlalchemy-seedify/sqlalchemy-seedify/issues)
+- 💬 Discussions: [GitHub Discussions](https://github.com/sqlalchemy-seedify/sqlalchemy-seedify/discussions)
 
 ---
 

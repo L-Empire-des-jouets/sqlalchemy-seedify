@@ -1,4 +1,4 @@
-"""Utility modules for alembic-seeder."""
+"""Utility modules for sqlalchemy-seedify."""
 
 from .environment import EnvironmentManager
 from .config import Config

@@ -1,5 +1,5 @@
 """
-Command-line interface for alembic-seeder.
+Command-line interface for sqlalchemy-seedify.
 """
 
 import sys
@@ -82,19 +82,19 @@ def cli(
 @cli.command()
 @click.pass_context
 def init(ctx: click.Context) -> None:
-    """Initialize alembic-seeder in your project."""
+    """Initialize sqlalchemy-seedify in your project."""
     
-    console.print("[bold blue]Initializing alembic-seeder...[/bold blue]")
+    console.print("[bold blue]Initializing sqlalchemy-seedify...[/bold blue]")
     
     config = ctx.obj["config"]
     
     # Run initialization
     init_command.initialize_project(config)
     
-    console.print("[bold green]✓ Alembic-seeder initialized successfully![/bold green]")
+    console.print("[bold green]✓ sqlalchemy-seedify initialized successfully![/bold green]")
     console.print("\nNext steps:")
-    console.print("1. Create your first seeder: [cyan]alembic-seeder make MyFirstSeeder[/cyan]")
-    console.print("2. Run seeders: [cyan]alembic-seeder run[/cyan]")
+    console.print("1. Create your first seeder: [cyan]sqlalchemy-seedify make MyFirstSeeder[/cyan]")
+    console.print("2. Run seeders: [cyan]sqlalchemy-seedify run[/cyan]")
 
 
 @cli.command()

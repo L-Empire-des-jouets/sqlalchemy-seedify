@@ -1,5 +1,5 @@
 """
-Initialize command for setting up alembic-seeder in a project.
+Initialize command for setting up sqlalchemy-seedify in a project.
 """
 
 import os
@@ -13,7 +13,7 @@ console = Console()
 
 
 ALEMBIC_ENV_TEMPLATE = '''
-# Add this to your alembic/env.py file to integrate with alembic-seeder
+# Add this to your alembic/env.py file to integrate with sqlalchemy-seedify
 
 from alembic_seeder.tracking.models import Base as SeederBase
 
@@ -134,12 +134,12 @@ def downgrade():
 
 def initialize_project(config):
     """
-    Initialize alembic-seeder in the current project.
+    Initialize sqlalchemy-seedify in the current project.
     
     Args:
         config: Configuration object
     """
-    console.print("[bold]Initializing alembic-seeder...[/bold]")
+    console.print("[bold]Initializing sqlalchemy-seedify...[/bold]")
     
     # Create seeders directory
     seeders_path = Path(config.seeders_path)
@@ -213,6 +213,6 @@ def initialize_project(config):
     console.print("\n[bold green]Initialization complete![/bold green]")
     console.print("\nNext steps:")
     console.print("1. Configure your database URL in seeder.config.json or set DATABASE_URL")
-    console.print("2. Create seeders: alembic-seeder make MySeeder")
-    console.print("3. Run seeders: alembic-seeder run")
-    console.print("4. Check status: alembic-seeder status")
+    console.print("2. Create seeders: sqlalchemy-seedify make MySeeder")
+    console.print("3. Run seeders: sqlalchemy-seedify run")
+    console.print("4. Check status: sqlalchemy-seedify status")

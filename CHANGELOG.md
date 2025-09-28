@@ -29,7 +29,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **EnvironmentManager**: Environment-specific configuration and execution
 
 #### CLI Commands
-- `init`: Initialize alembic-seeder in a project
+- `init`: Initialize sqlalchemy-seedify in a project
 - `make`: Create new seeder files from templates
 - `run`: Execute seeders with various options
 - `rollback`: Rollback executed seeders
@@ -117,4 +117,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **0.9.0-beta** - Beta release with core features
 - **0.1.0-alpha** - Initial alpha release
 
-For detailed release notes, see [GitHub Releases](https://github.com/alembic-seeder/alembic-seeder/releases).
+For detailed release notes, see [GitHub Releases](https://github.com/sqlalchemy-seedify/sqlalchemy-seedify/releases).
