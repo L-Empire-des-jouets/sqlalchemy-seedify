@@ -1,7 +1,9 @@
 [project]
 name = "sqlalchemy-seedify"
 version = "0.1.0"
-description = "Add your description here"
+description = "Idempotent database seeding for SQLAlchemy"
 readme = "README.md"
 requires-python = ">=3.12"
-dependencies = []
+dependencies = [
+    "sqlalchemy>=1.4.0",
+]
