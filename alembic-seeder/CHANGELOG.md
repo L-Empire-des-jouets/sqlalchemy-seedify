@@ -1,3 +1,15 @@
+## [1.1.0] - 2025-09-28
+
+### Added
+- Content-hash tracking for seeders (code + metadata) to detect changes and skip up-to-date seeders
+- `content_hash` column and index in tracking table; migration template updated
+- `UpsertManager` extracted and exported; `BaseSeeder` delegates idempotence helpers
+- CLI: `--fresh` option to clear history and re-run all; status shows changed seeders and hashes (detailed)
+
+### Improved
+- Registry import resilience for seeders located outside `sys.path`
+- Manager records execution_time and records_affected in tracker
+
 # Changelog
 
 All notable changes to Alembic Seeder will be documented in this file.

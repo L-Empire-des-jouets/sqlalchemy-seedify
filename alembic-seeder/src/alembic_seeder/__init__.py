@@ -10,6 +10,7 @@ from alembic_seeder.core.seeder_manager import SeederManager
 from alembic_seeder.core.seeder_registry import SeederRegistry
 from alembic_seeder.tracking.tracker import SeederTracker
 from alembic_seeder.utils.environment import EnvironmentManager
+from alembic_seeder.core.upsert_manager import UpsertManager
 
 __version__ = "1.1.0"
 
@@ -19,4 +20,5 @@ __all__ = [
     "SeederRegistry",
     "SeederTracker",
     "EnvironmentManager",
+    "UpsertManager",
 ]

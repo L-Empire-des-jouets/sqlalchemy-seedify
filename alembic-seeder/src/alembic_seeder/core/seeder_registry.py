@@ -70,15 +70,27 @@ class SeederRegistry:
         Args:
             file_path: Path to the Python file
         """
-        # Convert file path to module name
-        relative_path = file_path.relative_to(Path.cwd())
-        module_path = str(relative_path.with_suffix("")).replace(os.sep, ".")
+        # Convert file path to module name; fall back to direct path import
+        try:
+            relative_path = file_path.relative_to(Path.cwd())
+            module_path = str(relative_path.with_suffix("")).replace(os.sep, ".")
+        except Exception:
+            module_path = None
         
         # Import the module
         try:
-            module = importlib.import_module(module_path)
+            if module_path:
+                module = importlib.import_module(module_path)
+            else:
+                # Load from absolute path (seeders outside sys.path)
+                import importlib.util
+                spec = importlib.util.spec_from_file_location(file_path.stem, str(file_path))
+                if not spec or not spec.loader:
+                    raise ImportError(f"Cannot load spec for {file_path}")
+                module = importlib.util.module_from_spec(spec)
+                spec.loader.exec_module(module)  # type: ignore
         except ImportError as e:
-            logger.error(f"Failed to import module {module_path}: {e}")
+            logger.error(f"Failed to import seeder module from {file_path}: {e}")
             return
         
         # Find all seeder classes in the module

@@ -150,6 +150,11 @@ def make(
     help="Force run even if already executed",
 )
 @click.option(
+    "--fresh",
+    is_flag=True,
+    help="Truncate tracking and re-run all seeders (dangerous)",
+)
+@click.option(
     "--dry-run",
     is_flag=True,
     help="Perform a dry run without executing",
@@ -170,6 +175,7 @@ def make(
 def run(
     ctx: click.Context,
     force: bool,
+    fresh: bool,
     dry_run: bool,
     seeder: tuple,
     tag: tuple,
@@ -196,6 +202,15 @@ def run(
             return
     
     try:
+        if fresh and not dry_run:
+            if not Confirm.ask(
+                "[bold red]This will CLEAR seeder history and re-run all seeders. Continue?[/bold red]"
+            ):
+                console.print("[yellow]Aborted.[/yellow]")
+                return
+            deleted = tracker.clear_history(force=True)
+            console.print(f"[yellow]Cleared {deleted} history record(s).[/yellow]")
+            force = True
         if seeder:
             # Run specific seeders
             result = manager.run_specific(
@@ -402,12 +417,18 @@ def status(ctx: click.Context, detailed: bool) -> None:
         table.add_row("Total Seeders", str(status_info["total"]))
         table.add_row("Executed", f"[green]{status_info['executed']}[/green]")
         table.add_row("Pending", f"[yellow]{status_info['pending']}[/yellow]")
+        if status_info.get("changed"):
+            table.add_row("Changed", f"[yellow]{status_info['changed']}[/yellow]")
         
         console.print(table)
         
         if status_info["pending_list"]:
             console.print("\n[bold yellow]Pending Seeders:[/bold yellow]")
             for name in status_info["pending_list"]:
+                console.print(f"  • {name}")
+        if status_info.get("changed_list"):
+            console.print("\n[bold yellow]Changed Seeders (will re-run on force or change):[/bold yellow]")
+            for name in status_info["changed_list"]:
                 console.print(f"  • {name}")
         
         if detailed and status_info.get("execution_history"):
@@ -417,6 +438,7 @@ def status(ctx: click.Context, detailed: bool) -> None:
             history_table.add_column("Environment", style="magenta")
             history_table.add_column("Executed At", style="white")
             history_table.add_column("Batch", style="yellow")
+            history_table.add_column("Hash", style="white")
             
             for record in status_info["execution_history"]:
                 history_table.add_row(
@@ -424,6 +446,7 @@ def status(ctx: click.Context, detailed: bool) -> None:
                     record["environment"],
                     str(record["executed_at"]),
                     str(record["batch"]),
+                    record.get("content_hash", "-"),
                 )
             
             console.print(history_table)

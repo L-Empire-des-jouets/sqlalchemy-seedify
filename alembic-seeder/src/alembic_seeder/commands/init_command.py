@@ -113,15 +113,18 @@ def upgrade():
         sa.Column('status', sa.String(length=20), nullable=False),
         sa.Column('error_message', sa.Text(), nullable=True),
         sa.Column('metadata_json', sa.Text(), nullable=True),
+        sa.Column('content_hash', sa.String(length=64), nullable=True),
         sa.PrimaryKeyConstraint('id'),
         sa.UniqueConstraint('seeder_name', 'environment', name='uq_seeder_env')
     )
     op.create_index(op.f('ix_alembic_seeder_history_batch'), 'alembic_seeder_history', ['batch'], unique=False)
     op.create_index(op.f('ix_alembic_seeder_history_environment'), 'alembic_seeder_history', ['environment'], unique=False)
     op.create_index(op.f('ix_alembic_seeder_history_seeder_name'), 'alembic_seeder_history', ['seeder_name'], unique=False)
+    op.create_index(op.f('ix_alembic_seeder_history_content_hash'), 'alembic_seeder_history', ['content_hash'], unique=False)
 
 
 def downgrade():
+    op.drop_index(op.f('ix_alembic_seeder_history_content_hash'), table_name='alembic_seeder_history')
     op.drop_index(op.f('ix_alembic_seeder_history_seeder_name'), table_name='alembic_seeder_history')
     op.drop_index(op.f('ix_alembic_seeder_history_environment'), table_name='alembic_seeder_history')
     op.drop_index(op.f('ix_alembic_seeder_history_batch'), table_name='alembic_seeder_history')
