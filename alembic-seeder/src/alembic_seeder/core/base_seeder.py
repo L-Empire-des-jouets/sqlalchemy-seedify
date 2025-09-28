@@ -284,20 +284,13 @@ class BaseSeeder(ABC):
         if self.session is None:
             raise RuntimeError("Session is required for get_or_create")
 
-        instance = self.session.query(model).filter_by(**where).first()
-        if instance:
-            return {"action": "found", "instance": instance}
-
-        payload: Dict[str, Any] = {}
-        if defaults:
-            payload.update(defaults)
-        payload.update(where)
-
-        instance = model(**payload)
-        self.session.add(instance)
-        self.session.flush()
-        self._records_affected += 1
-        return {"action": "created", "instance": instance}
+        from alembic_seeder.core.upsert_manager import UpsertManager
+        manager = UpsertManager(self.session)
+        instance, created = manager.get_or_create(model, where, defaults)
+        if created:
+            self._records_affected += 1
+            return {"action": "created", "instance": instance}
+        return {"action": "found", "instance": instance}
 
     def upsert(
         self,
@@ -320,32 +313,17 @@ class BaseSeeder(ABC):
         if self.session is None:
             raise RuntimeError("Session is required for upsert")
 
-        instance = self.session.query(model).filter_by(**where).first()
-        if not instance:
-            payload = {**where, **values}
-            instance = model(**payload)
-            self.session.add(instance)
-            self.session.flush()
+        from alembic_seeder.core.upsert_manager import UpsertManager
+        manager = UpsertManager(self.session)
+        instance, action = manager.upsert(
+            model=model,
+            where=where,
+            values=values,
+            update_existing=update_existing,
+        )
+        if action == "created" or (action == "updated" and count_update_as_affected):
             self._records_affected += 1
-            return {"action": "created", "instance": instance}
-
-        if not update_existing:
-            return {"action": "unchanged", "instance": instance}
-
-        changed = False
-        for field, new_value in values.items():
-            current_value = getattr(instance, field, None)
-            if current_value != new_value:
-                setattr(instance, field, new_value)
-                changed = True
-
-        if changed:
-            self.session.flush()
-            if count_update_as_affected:
-                self._records_affected += 1
-            return {"action": "updated", "instance": instance}
-
-        return {"action": "unchanged", "instance": instance}
+        return {"action": action, "instance": instance}
 
     def bulk_upsert(
         self,
@@ -371,70 +349,16 @@ class BaseSeeder(ABC):
         if not rows:
             return {"created": 0, "updated": 0, "unchanged": 0}
 
-        key_tuples = []
-        for row in rows:
-            try:
-                key_tuples.append(tuple(row[k] for k in key_fields))
-            except KeyError as e:
-                raise ValueError(f"Missing key field in row: {e}")
-
-        # Build OR-of-AND filters to fetch existing rows in one query
-        filters = []
-        for key_values in key_tuples:
-            clauses = []
-            for idx, field in enumerate(key_fields):
-                clauses.append(getattr(model, field) == key_values[idx])
-            filters.append(and_(*clauses))
-
-        existing_by_key: Dict[tuple, Any] = {}
-        if filters:
-            existing = self.session.query(model).filter(or_(*filters)).all()
-            for obj in existing:
-                key = tuple(getattr(obj, f) for f in key_fields)
-                existing_by_key[key] = obj
-
-        created_count = 0
-        updated_count = 0
-        unchanged_count = 0
-
-        for row in rows:
-            key = tuple(row[k] for k in key_fields)
-            obj = existing_by_key.get(key)
-            if obj is None:
-                obj = model(**row)
-                self.session.add(obj)
-                created_count += 1
-                # Track for potential subsequent updates in same batch
-                existing_by_key[key] = obj
-                continue
-
-            # Determine fields to update
-            fields_to_update = (
-                [f for f in row.keys() if f not in key_fields]
-                if update_fields is None
-                else [f for f in update_fields if f in row]
-            )
-
-            changed = False
-            for field in fields_to_update:
-                new_value = row[field]
-                if getattr(obj, field, None) != new_value:
-                    setattr(obj, field, new_value)
-                    changed = True
-
-            if changed:
-                updated_count += 1
-            else:
-                unchanged_count += 1
-
-        self.session.flush()
-
-        self._records_affected += created_count
+        from alembic_seeder.core.upsert_manager import UpsertManager
+        manager = UpsertManager(self.session)
+        summary = manager.bulk_upsert(
+            model=model,
+            rows=rows,
+            key_fields=key_fields,
+            update_fields=update_fields,
+        )
+        # Track affected rows consistent with previous behavior
+        self._records_affected += summary["created"]
         if count_update_as_affected:
-            self._records_affected += updated_count
-
-        return {
-            "created": created_count,
-            "updated": updated_count,
-            "unchanged": unchanged_count,
-        }
+            self._records_affected += summary["updated"]
+        return summary

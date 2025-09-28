@@ -34,6 +34,7 @@ class SeederRecord(Base):
     status = Column(String(20), nullable=False, default="completed")
     error_message = Column(Text, nullable=True)
     metadata_json = Column(Text, nullable=True)  # JSON string for additional metadata
+    content_hash = Column(String(64), nullable=True, index=True)
     
     def __repr__(self) -> str:
         return (

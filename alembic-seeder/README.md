@@ -13,6 +13,7 @@ A comprehensive seeder system for Alembic and SQLAlchemy, inspired by Laravel's 
 - **Dependency Resolution**: Define dependencies between seeders with automatic ordering
 - **Rollback Support**: Undo seeder operations when needed
 - **Tracking System**: Keep track of which seeders have been executed
+- **Content Hashing**: Detect changed seeders via code+metadata hash; skip up-to-date seeders
 - **CLI Integration**: Seamless integration with Alembic commands
 - **Batch Operations**: Execute seeders in batches for better organization
 - **Dry Run Mode**: Preview what will be executed without making changes
@@ -208,6 +209,9 @@ alembic-seeder run --seeder UserSeeder --seeder ProductSeeder
 # Force re-run
 alembic-seeder run --force
 
+# Fresh run (clear tracking, then run all)
+alembic-seeder run --fresh
+
 # Dry run
 alembic-seeder run --dry-run
 
@@ -362,6 +366,7 @@ The tracking table (`alembic_seeder_history`) stores:
 - Batch number
 - Records affected
 - Status and error messages
+ - Content hash (sha256) for change detection
 
 ## 🧪 Testing
 

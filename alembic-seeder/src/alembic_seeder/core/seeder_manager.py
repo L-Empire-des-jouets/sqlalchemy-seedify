@@ -13,6 +13,7 @@ from pydantic import BaseModel
 from alembic_seeder.core.base_seeder import BaseSeeder
 from alembic_seeder.core.seeder_registry import SeederRegistry
 from alembic_seeder.tracking.tracker import SeederTracker
+from alembic_seeder.tracking.hash import compute_seeder_content_hash
 from alembic_seeder.utils.environment import EnvironmentManager
 
 logger = logging.getLogger(__name__)
@@ -298,6 +299,25 @@ class SeederManager:
             "pending_list": pending,
         }
         
+        # Detect changed seeders based on content hash
+        changed = []
+        for record in executed:
+            seeder_class = self.registry.get(record.seeder_name)
+            if not seeder_class:
+                # Seeder no longer present; consider changed
+                changed.append(record.seeder_name)
+                continue
+            try:
+                current_hash = compute_seeder_content_hash(seeder_class)
+                if (record.content_hash or "") != (current_hash or ""):
+                    changed.append(record.seeder_name)
+            except Exception:
+                # If we cannot compute, consider potentially changed
+                changed.append(record.seeder_name)
+
+        status["changed"] = len(changed)
+        status["changed_list"] = sorted(set(changed))
+
         if detailed:
             status["execution_history"] = [
                 {
@@ -305,6 +325,7 @@ class SeederManager:
                     "executed_at": record.executed_at,
                     "environment": record.environment,
                     "batch": record.batch,
+                    "content_hash": getattr(record, "content_hash", None),
                 }
                 for record in executed
             ]
@@ -412,17 +433,24 @@ class SeederManager:
         
         for name in seeder_names:
             # Check if already executed
-            if not force and self.tracker.is_executed(name, environment):
-                logger.info(f"Skipping already executed seeder: {name}")
-                skipped += 1
-                continue
-            
-            # Get seeder class
             seeder_class = self.registry.get(name)
             if not seeder_class:
                 logger.warning(f"Seeder not found: {name}")
                 skipped += 1
                 continue
+
+            current_hash = None
+            try:
+                current_hash = compute_seeder_content_hash(seeder_class)
+            except Exception as e:
+                logger.debug(f"Could not compute content hash for {name}: {e}")
+
+            if not force:
+                # If executed and hash matches, skip
+                if self.tracker.is_up_to_date(name, environment, current_hash):
+                    logger.info(f"Skipping up-to-date seeder: {name}")
+                    skipped += 1
+                    continue
             
             # Check environment
             metadata = seeder_class._get_metadata()
@@ -446,7 +474,13 @@ class SeederManager:
                 if result["status"] == "success":
                     successful += 1
                     self.tracker.mark_executed(
-                        name, environment, batch_number
+                        name,
+                        environment,
+                        batch_number,
+                        execution_time=int(result.get("duration", 0) * 1000),
+                        records_affected=result.get("records_affected"),
+                        metadata={"description": metadata.description},
+                        content_hash=current_hash,
                     )
                     self.session.commit()
                 else:

@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "alembic-seeder"
-version = "1.0.0"
+version = "1.1.0"
 description = "A comprehensive seeder system for Alembic and SQLAlchemy, inspired by Laravel seeders"
 readme = "README.md"
 requires-python = ">=3.8"

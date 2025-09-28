@@ -52,6 +52,7 @@ class SeederTracker:
         execution_time: Optional[int] = None,
         records_affected: Optional[int] = None,
         metadata: Optional[Dict[str, Any]] = None,
+        content_hash: Optional[str] = None,
     ) -> SeederRecord:
         """
         Mark a seeder as executed.
@@ -77,6 +78,7 @@ class SeederTracker:
                 records_affected=records_affected,
                 status="completed",
                 metadata_json=json.dumps(metadata) if metadata else None,
+                content_hash=content_hash,
             )
             
             self.session.add(record)
@@ -101,6 +103,8 @@ class SeederTracker:
                 existing.status = "completed"
                 existing.error_message = None
                 existing.metadata_json = json.dumps(metadata) if metadata else None
+                if content_hash:
+                    existing.content_hash = content_hash
                 self.session.flush()
                 return existing
             raise
@@ -178,6 +182,21 @@ class SeederTracker:
         """
         record = self.get_record(seeder_name, environment)
         return record is not None and record.status == "completed"
+
+    def is_up_to_date(
+        self, seeder_name: str, environment: str, current_hash: Optional[str]
+    ) -> bool:
+        """
+        Check if a seeder has been executed and matches the current content hash.
+
+        Returns False if no record or hashes mismatch (or unknown current hash).
+        """
+        record = self.get_record(seeder_name, environment)
+        if not record or record.status != "completed":
+            return False
+        if current_hash is None:
+            return False
+        return (record.content_hash or "") == current_hash
     
     def get_record(
         self, seeder_name: str, environment: str
