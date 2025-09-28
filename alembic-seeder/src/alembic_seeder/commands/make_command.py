@@ -37,20 +37,20 @@ class {class_name}(BaseSeeder):
     
     def run(self):
         """Execute the seeder."""
-        # TODO: Implement your seeding logic here
-        # Example:
+        # Best practice: one seeder per table, idempotent by default
+        # Example with upsert (idempotent insert-or-update):
         # from myapp.models import MyModel
-        # 
-        # data = [
-        #     MyModel(field1="value1", field2="value2"),
-        #     MyModel(field1="value3", field2="value4"),
+        # rows = [
+        #     {"code": "value1", "label": "Label 1"},
+        #     {"code": "value2", "label": "Label 2"},
         # ]
-        # 
-        # for item in data:
-        #     self.session.add(item)
-        # 
-        # self.session.flush()
-        # self._records_affected = len(data)
+        # for row in rows:
+        #     self.upsert(
+        #         model=MyModel,
+        #         where={"code": row["code"]},  # business key
+        #         values={"label": row["label"]},
+        #         update_existing=True,
+        #     )
         
         pass
     {rollback_method}
@@ -103,24 +103,23 @@ class {class_name}(BaseSeeder):
         
         fake = Faker()
         
-        # TODO: Implement your seeding logic here
+        # Best practice: idempotent seeding via bulk_upsert using a business key
         # Example:
         # from myapp.models import User
-        # 
-        # users = []
+        # rows = []
         # for _ in range(100):
-        #     user = User(
-        #         name=fake.name(),
-        #         email=fake.unique.email(),
-        #         phone=fake.phone_number(),
-        #         address=fake.address(),
-        #         created_at=fake.date_time_between("-1y", "now"),
-        #     )
-        #     users.append(user)
-        # 
-        # self.session.bulk_save_objects(users)
-        # self.session.flush()
-        # self._records_affected = len(users)
+        #     rows.append({
+        #         "email": fake.unique.email(),  # business key
+        #         "name": fake.name(),
+        #         "phone": fake.phone_number(),
+        #         "address": fake.address(),
+        #     })
+        # self.bulk_upsert(
+        #     model=User,
+        #     rows=rows,
+        #     key_fields=["email"],
+        #     update_fields=["name", "phone", "address"],
+        # )
         
         pass
     {rollback_method}
@@ -150,29 +149,17 @@ class {class_name}(BaseSeeder):
     
     def run(self):
         """Execute the seeder using factory pattern."""
-        # TODO: Implement your factory-based seeding logic
+        # Ensure factories produce deterministic business keys to allow idempotent upserts
         # Example with factory_boy:
-        # from myapp.factories import UserFactory, PostFactory
-        # 
-        # # Create users
-        # users = UserFactory.create_batch(10)
-        # 
-        # # Create posts for each user
+        # from myapp.factories import UserFactory
+        # from myapp.models import User
+        # users = UserFactory.build_batch(10)  # build, don't persist
         # for user in users:
-        #     PostFactory.create_batch(5, author=user)
-        # 
-        # self.session.flush()
-        # self._records_affected = 10 + (10 * 5)  # users + posts
-        
-        # Example with custom factory:
-        # from myapp.factories import DataFactory
-        # 
-        # factory = DataFactory(self.session)
-        # factory.create_users(10)
-        # factory.create_posts(50)
-        # factory.create_comments(200)
-        # 
-        # self._records_affected = factory.total_created
+        #     self.upsert(
+        #         model=User,
+        #         where={"email": user.email},
+        #         values={"name": user.name},
+        #     )
         
         pass
     {rollback_method}
@@ -202,35 +189,28 @@ class {class_name}(BaseSeeder):
     
     def run(self):
         """Execute the seeder for relational data."""
-        # TODO: Implement seeding for related models
-        # Example:
-        # from myapp.models import User, Profile, Role
-        # 
-        # # Get or create roles
-        # admin_role = self.session.query(Role).filter_by(name="admin").first()
-        # user_role = self.session.query(Role).filter_by(name="user").first()
-        # 
-        # # Get existing users (from previous seeder)
+        # Example with idempotent upserts across relations:
+        # from myapp.models import User, Profile, Role, UserRole
+        # self.upsert(Role, {"name": "admin"}, {"description": "Administrator"})
+        # self.upsert(Role, {"name": "user"}, {"description": "User"})
         # users = self.session.query(User).all()
-        # 
-        # # Create profiles and assign roles
         # for user in users:
-        #     # Create profile
-        #     profile = Profile(
-        #         user_id=user.id,
-        #         bio="Lorem ipsum...",
-        #         avatar_url=f"https://example.com/avatar/{{user.id}}.jpg"
+        #     # Profile by unique user_id
+        #     self.upsert(
+        #         Profile,
+        #         where={"user_id": user.id},
+        #         values={"bio": "Lorem ipsum..."},
         #     )
-        #     self.session.add(profile)
-        #     
-        #     # Assign role
-        #     if user.email.endswith("@admin.com"):
-        #         user.roles.append(admin_role)
-        #     else:
-        #         user.roles.append(user_role)
-        # 
-        # self.session.flush()
-        # self._records_affected = len(users) * 2  # profiles + role assignments
+        #     # N-N assignment via unique composite (user_id, role_id)
+        #     role_name = "admin" if user.email.endswith("@admin.com") else "user"
+        #     role = self.session.query(Role).filter_by(name=role_name).first()
+        #     if role:
+        #         self.upsert(
+        #             UserRole,
+        #             where={"user_id": user.id, "role_id": role.id},
+        #             values={},
+        #             update_existing=False,
+        #         )
         
         pass
     {rollback_method}
