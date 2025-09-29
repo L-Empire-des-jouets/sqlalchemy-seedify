@@ -11,7 +11,7 @@ requires-python = ">=3.8"
 license = "MIT"
 keywords = ["alembic", "sqlalchemy", "seeder", "database", "migration", "seed"]
 authors = [
-    { name = "Alembic Seeder Contributors", email = "contact@sqlalchemy-seedify.dev" }
+    { name = "Alexandre", email = "contact@sqlalchemy-seedify.dev" }
 ]
 classifiers = [
     "Development Status :: 4 - Beta",
@@ -60,7 +60,7 @@ Source = "https://github.com/sqlalchemy-seedify/sqlalchemy-seedify"
 sqlalchemy-seedify = "alembic_seeder.cli:main"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/alembic_seeder"]
+packages = ["src"]
 
 [tool.ruff]
 line-length = 100
