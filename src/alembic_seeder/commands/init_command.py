@@ -42,7 +42,7 @@ from alembic_seeder import BaseSeeder
 
 class {name}(BaseSeeder):
     """Example seeder that demonstrates basic usage."""
-    
+
     @classmethod
     def _get_metadata(cls):
         from alembic_seeder.core.base_seeder import SeederMetadata
@@ -54,37 +54,37 @@ class {name}(BaseSeeder):
             priority=100,
             can_rollback=True,
         )
-    
+
     def run(self):
         """Execute the seeder."""
         # Example: Insert data into your database
         # from myapp.models import User
-        # 
+        #
         # user = User(
         #     name="John Doe",
         #     email="john@example.com"
         # )
         # self.session.add(user)
         # self.session.flush()
-        
+
         self._records_affected = 1
         print(f"Seeder {{self.name}} executed successfully!")
-    
+
     def rollback(self):
         """Rollback the seeder."""
         # Example: Remove the data that was inserted
         # from myapp.models import User
-        # 
+        #
         # self.session.query(User).filter_by(email="john@example.com").delete()
         # self.session.flush()
-        
+
         print(f"Seeder {{self.name}} rolled back successfully!")
 '''
 
 MIGRATION_TEMPLATE = '''"""Create alembic_seeder_history table
 
 Revision ID: {revision_id}
-Revises: 
+Revises:
 Create Date: {create_date}
 
 """
@@ -116,16 +116,28 @@ def upgrade():
         sa.PrimaryKeyConstraint('id'),
         sa.UniqueConstraint('seeder_name', 'environment', name='uq_seeder_env')
     )
-    op.create_index(op.f('ix_alembic_seeder_history_batch'), 'alembic_seeder_history', ['batch'], unique=False)
-    op.create_index(op.f('ix_alembic_seeder_history_environment'), 'alembic_seeder_history', ['environment'], unique=False)
-    op.create_index(op.f('ix_alembic_seeder_history_seeder_name'), 'alembic_seeder_history', ['seeder_name'], unique=False)
-    op.create_index(op.f('ix_alembic_seeder_history_content_hash'), 'alembic_seeder_history', ['content_hash'], unique=False)
+    op.create_index(
+        op.f('ix_alembic_seeder_history_batch'),
+        'alembic_seeder_history', ['batch'], unique=False)
+    op.create_index(
+        op.f('ix_alembic_seeder_history_environment'),
+        'alembic_seeder_history', ['environment'], unique=False)
+    op.create_index(
+        op.f('ix_alembic_seeder_history_seeder_name'),
+        'alembic_seeder_history', ['seeder_name'], unique=False)
+    op.create_index(
+        op.f(
+            'ix_alembic_seeder_history_content_hash'),
+            'alembic_seeder_history', ['content_hash'], unique=False)
 
 
 def downgrade():
-    op.drop_index(op.f('ix_alembic_seeder_history_content_hash'), table_name='alembic_seeder_history')
-    op.drop_index(op.f('ix_alembic_seeder_history_seeder_name'), table_name='alembic_seeder_history')
-    op.drop_index(op.f('ix_alembic_seeder_history_environment'), table_name='alembic_seeder_history')
+    op.drop_index(op.f('ix_alembic_seeder_history_content_hash'),
+        table_name='alembic_seeder_history')
+    op.drop_index(
+        op.f('ix_alembic_seeder_history_seeder_name'), table_name='alembic_seeder_history')
+    op.drop_index(
+        op.f('ix_alembic_seeder_history_environment'), table_name='alembic_seeder_history')
     op.drop_index(op.f('ix_alembic_seeder_history_batch'), table_name='alembic_seeder_history')
     op.drop_table('alembic_seeder_history')
 '''
