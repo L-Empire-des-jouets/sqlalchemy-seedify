@@ -11,7 +11,7 @@ from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
 from src.core.seeder_registry import SeederRegistry
-from ..tracking.hash import compute_seeder_content_hash
+from src.tracking.hash import compute_seeder_content_hash
 from src.tracking.tracker import SeederTracker
 from src.utils.environment import EnvironmentManager
 

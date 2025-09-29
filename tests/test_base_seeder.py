@@ -4,8 +4,8 @@ Tests for BaseSeeder class.
 
 from unittest.mock import Mock
 
-from alembic_seeder import BaseSeeder
-from alembic_seeder.core.base_seeder import SeederMetadata
+from src import BaseSeeder
+from src.core.base_seeder import SeederMetadata
 
 
 class TestSeeder(BaseSeeder):
