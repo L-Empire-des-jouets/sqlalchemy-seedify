@@ -3,7 +3,6 @@ Database models for seeder tracking.
 """
 
 from datetime import datetime
-from typing import Optional
 
 from sqlalchemy import Column, DateTime, Integer, String, Text, UniqueConstraint
 from sqlalchemy.ext.declarative import declarative_base
@@ -14,16 +13,14 @@ Base = declarative_base()
 class SeederRecord(Base):
     """
     Model for tracking executed seeders.
-    
+
     This table keeps track of which seeders have been executed,
     when they were executed, and in which environment.
     """
-    
+
     __tablename__ = "alembic_seeder_history"
-    __table_args__ = (
-        UniqueConstraint("seeder_name", "environment", name="uq_seeder_env"),
-    )
-    
+    __table_args__ = (UniqueConstraint("seeder_name", "environment", name="uq_seeder_env"),)
+
     id = Column(Integer, primary_key=True, autoincrement=True)
     seeder_name = Column(String(255), nullable=False, index=True)
     environment = Column(String(50), nullable=False, index=True)
@@ -35,9 +32,8 @@ class SeederRecord(Base):
     error_message = Column(Text, nullable=True)
     metadata_json = Column(Text, nullable=True)  # JSON string for additional metadata
     content_hash = Column(String(64), nullable=True, index=True)
-    
+
     def __repr__(self) -> str:
         return (
-            f"<SeederRecord(name={self.seeder_name}, "
-            f"env={self.environment}, batch={self.batch})>"
+            f"<SeederRecord(name={self.seeder_name}, env={self.environment}, batch={self.batch})>"
         )

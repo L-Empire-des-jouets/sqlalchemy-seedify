@@ -54,4 +54,3 @@ def compute_seeder_content_hash(seeder_class: Type[BaseSeeder]) -> str:
     sha.update(meta_json.encode("utf-8"))
 
     return sha.hexdigest()
-

@@ -2,10 +2,9 @@
 Make command for creating new seeder files.
 """
 
-import os
-from pathlib import Path
-from datetime import datetime
 import logging
+from datetime import datetime
+from pathlib import Path
 
 from rich.console import Console
 
@@ -229,13 +228,13 @@ def create_seeder(
     template: str = "basic",
     environments: list = None,
     with_rollback: bool = False,
-    config = None,
+    config=None,
     dependencies: list = None,
     priority: int = 100,
 ) -> Path:
     """
     Create a new seeder file from template.
-    
+
     Args:
         name: Name of the seeder class
         template: Template to use
@@ -244,29 +243,29 @@ def create_seeder(
         config: Configuration object
         dependencies: List of seeder dependencies
         priority: Execution priority
-        
+
     Returns:
         Path to the created seeder file
     """
     # Ensure name is a valid class name
     if not name[0].isupper():
         name = name[0].upper() + name[1:]
-    
+
     if not name.endswith("Seeder"):
         name = name + "Seeder"
-    
+
     # Generate filename
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     filename = f"{timestamp}_{name.lower()}.py"
-    
+
     # Get seeders path
     seeders_path = Path(config.seeders_path if config else "seeders")
     seeders_path.mkdir(parents=True, exist_ok=True)
-    
+
     # Prepare template variables
     environments = environments or ["all"]
     dependencies = dependencies or []
-    
+
     template_vars = {
         "class_name": name,
         "description": f"Seeder for {name}",
@@ -276,25 +275,27 @@ def create_seeder(
         "can_rollback": str(with_rollback),
         "rollback_method": ROLLBACK_TEMPLATE if with_rollback else "",
     }
-    
+
     # Get template
     template_content = TEMPLATES.get(template, BASIC_TEMPLATE)
-    
+
     # Generate content
     content = template_content.format(**template_vars)
-    
+
     # Write file
     file_path = seeders_path / filename
     file_path.write_text(content)
-    
+
     console.print(f"[green]✓[/green] Created seeder: {file_path}")
-    
+
     # Provide next steps
     console.print("\nNext steps:")
     console.print(f"1. Edit the seeder: {file_path}")
     console.print("2. Implement the run() method")
     if with_rollback:
         console.print("3. Implement the rollback() method")
-    console.print(f"{3 if not with_rollback else 4}. Run the seeder: sqlalchemy-seedify run --seeder {name}")
-    
+    console.print(
+        f"{3 if not with_rollback else 4}. Run the seeder: sqlalchemy-seedify run --seeder {name}"
+    )
+
     return file_path

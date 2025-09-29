@@ -136,4 +136,3 @@ class UpsertManager:
             "updated": updated_count,
             "unchanged": unchanged_count,
         }
-

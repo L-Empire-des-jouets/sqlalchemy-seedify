@@ -1,6 +1,6 @@
 """Utility modules for sqlalchemy-seedify."""
 
-from .environment import EnvironmentManager
 from .config import Config
+from .environment import EnvironmentManager
 
 __all__ = ["EnvironmentManager", "Config"]
