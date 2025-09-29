@@ -4,8 +4,8 @@ Tests for BaseSeeder class.
 
 from unittest.mock import Mock
 
-from src.sqlalchemy_seedify import BaseSeeder
-from src.sqlalchemy_seedify.core.base_seeder import SeederMetadata
+from sqlalchemy_seedify import BaseSeeder
+from sqlalchemy_seedify.core.base_seeder import SeederMetadata
 
 
 class TestSeeder(BaseSeeder):

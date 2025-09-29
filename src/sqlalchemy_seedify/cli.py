@@ -13,10 +13,10 @@ from rich.table import Table
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from src.sqlalchemy_seedify.commands import init_command, make_command
-from src.sqlalchemy_seedify.core import SeederManager, SeederRegistry
-from src.sqlalchemy_seedify.tracking import SeederTracker
-from src.sqlalchemy_seedify.utils import Config, EnvironmentManager
+from sqlalchemy_seedify.commands import init_command, make_command
+from sqlalchemy_seedify.core import SeederManager, SeederRegistry
+from sqlalchemy_seedify.tracking import SeederTracker
+from sqlalchemy_seedify.utils import Config, EnvironmentManager
 
 logger = logging.getLogger(__name__)
 console = Console()

@@ -11,7 +11,7 @@ from sqlalchemy import desc, func
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
-from src.sqlalchemy_seedify.tracking.models import SeederRecord
+from sqlalchemy_seedify.tracking.models import SeederRecord
 
 logger = logging.getLogger(__name__)
 
@@ -39,7 +39,7 @@ class SeederTracker:
         # This would typically be handled by a migration, but we provide
         # a method to create it programmatically if needed
         try:
-            from src.sqlalchemy_seedify.tracking.models import Base
+            from sqlalchemy_seedify.tracking.models import Base
 
             Base.metadata.create_all(bind=self.session.bind, checkfirst=True)
         except Exception as e:

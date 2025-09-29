@@ -57,7 +57,7 @@ Issues = "https://github.com/sqlalchemy-seedify/sqlalchemy-seedify/issues"
 Source = "https://github.com/sqlalchemy-seedify/sqlalchemy-seedify"
 
 [project.scripts]
-sqlalchemy-seedify = "src.sqlalchemy_seedify.cli:main"
+sqlalchemy-seedify = "sqlalchemy_seedify.cli:main"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/sqlalchemy_seedify"]

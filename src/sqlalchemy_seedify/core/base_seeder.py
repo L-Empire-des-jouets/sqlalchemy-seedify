@@ -283,7 +283,7 @@ class BaseSeeder(ABC):
         if self.session is None:
             raise RuntimeError("Session is required for get_or_create")
 
-        from src.sqlalchemy_seedify.core.upsert_manager import UpsertManager
+        from sqlalchemy_seedify.core.upsert_manager import UpsertManager
 
         manager = UpsertManager(self.session)
         instance, created = manager.get_or_create(model, where, defaults)
@@ -313,7 +313,7 @@ class BaseSeeder(ABC):
         if self.session is None:
             raise RuntimeError("Session is required for upsert")
 
-        from src.sqlalchemy_seedify.core.upsert_manager import UpsertManager
+        from sqlalchemy_seedify.core.upsert_manager import UpsertManager
 
         manager = UpsertManager(self.session)
         instance, action = manager.upsert(
@@ -350,7 +350,7 @@ class BaseSeeder(ABC):
         if not rows:
             return {"created": 0, "updated": 0, "unchanged": 0}
 
-        from src.sqlalchemy_seedify.core.upsert_manager import UpsertManager
+        from sqlalchemy_seedify.core.upsert_manager import UpsertManager
 
         manager = UpsertManager(self.session)
         summary = manager.bulk_upsert(
