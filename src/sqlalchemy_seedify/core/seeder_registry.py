@@ -9,7 +9,7 @@ import os
 from pathlib import Path
 from typing import Dict, List, Optional, Type
 
-from src.core.base_seeder import BaseSeeder
+from src.sqlalchemy_seedify.core.base_seeder import BaseSeeder
 
 logger = logging.getLogger(__name__)
 

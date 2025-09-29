@@ -7,7 +7,7 @@ import inspect
 import json
 from typing import Type
 
-from src.core.base_seeder import BaseSeeder
+from src.sqlalchemy_seedify.core.base_seeder import BaseSeeder
 
 
 def compute_seeder_content_hash(seeder_class: Type[BaseSeeder]) -> str:
