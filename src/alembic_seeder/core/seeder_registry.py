@@ -83,7 +83,6 @@ class SeederRegistry:
                 module = importlib.import_module(module_path)
             else:
                 # Load from absolute path (seeders outside sys.path)
-                import importlib.util
 
                 spec = importlib.util.spec_from_file_location(file_path.stem, str(file_path))
                 if not spec or not spec.loader:
@@ -95,7 +94,7 @@ class SeederRegistry:
             return
 
         # Find all seeder classes in the module
-        for name, obj in inspect.getmembers(module):
+        for _, obj in inspect.getmembers(module):
             if (
                 inspect.isclass(obj)
                 and issubclass(obj, BaseSeeder)

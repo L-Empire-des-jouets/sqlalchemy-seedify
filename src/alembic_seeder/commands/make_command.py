@@ -21,7 +21,7 @@ from alembic_seeder import BaseSeeder
 
 class {class_name}(BaseSeeder):
     """{description}"""
-    
+
     @classmethod
     def _get_metadata(cls):
         from alembic_seeder.core.base_seeder import SeederMetadata
@@ -33,7 +33,7 @@ class {class_name}(BaseSeeder):
             priority={priority},
             can_rollback={can_rollback},
         )
-    
+
     def run(self):
         """Execute the seeder."""
         # Best practice: one seeder per table, idempotent by default
@@ -50,7 +50,7 @@ class {class_name}(BaseSeeder):
         #         values={"label": row["label"]},
         #         update_existing=True,
         #     )
-        
+
         pass
     {rollback_method}
 '''
@@ -61,13 +61,13 @@ ROLLBACK_TEMPLATE = '''
         # TODO: Implement your rollback logic here
         # Example:
         # from myapp.models import MyModel
-        # 
+        #
         # self.session.query(MyModel).filter(
         #     MyModel.created_by == "seeder"
         # ).delete()
-        # 
+        #
         # self.session.flush()
-        
+
         pass'''
 
 FAKER_TEMPLATE = '''"""
@@ -79,7 +79,7 @@ from alembic_seeder import BaseSeeder
 
 class {class_name}(BaseSeeder):
     """{description}"""
-    
+
     @classmethod
     def _get_metadata(cls):
         from alembic_seeder.core.base_seeder import SeederMetadata
@@ -92,16 +92,16 @@ class {class_name}(BaseSeeder):
             can_rollback={can_rollback},
             batch_size=100,
         )
-    
+
     def run(self):
         """Execute the seeder with Faker data."""
         try:
             from faker import Faker
         except ImportError:
             raise ImportError("Faker is required. Install it with: pip install faker")
-        
+
         fake = Faker()
-        
+
         # Best practice: idempotent seeding via bulk_upsert using a business key
         # Example:
         # from myapp.models import User
@@ -119,7 +119,7 @@ class {class_name}(BaseSeeder):
         #     key_fields=["email"],
         #     update_fields=["name", "phone", "address"],
         # )
-        
+
         pass
     {rollback_method}
 '''
@@ -133,7 +133,7 @@ from alembic_seeder import BaseSeeder
 
 class {class_name}(BaseSeeder):
     """{description}"""
-    
+
     @classmethod
     def _get_metadata(cls):
         from alembic_seeder.core.base_seeder import SeederMetadata
@@ -145,7 +145,7 @@ class {class_name}(BaseSeeder):
             priority={priority},
             can_rollback={can_rollback},
         )
-    
+
     def run(self):
         """Execute the seeder using factory pattern."""
         # Ensure factories produce deterministic business keys to allow idempotent upserts
@@ -159,7 +159,7 @@ class {class_name}(BaseSeeder):
         #         where={"email": user.email},
         #         values={"name": user.name},
         #     )
-        
+
         pass
     {rollback_method}
 '''
@@ -173,7 +173,7 @@ from alembic_seeder import BaseSeeder
 
 class {class_name}(BaseSeeder):
     """{description}"""
-    
+
     @classmethod
     def _get_metadata(cls):
         from alembic_seeder.core.base_seeder import SeederMetadata
@@ -185,7 +185,7 @@ class {class_name}(BaseSeeder):
             priority={priority},
             can_rollback={can_rollback},
         )
-    
+
     def run(self):
         """Execute the seeder for relational data."""
         # Example with idempotent upserts across relations:
@@ -210,7 +210,7 @@ class {class_name}(BaseSeeder):
         #             values={},
         #             update_existing=False,
         #         )
-        
+
         pass
     {rollback_method}
 '''
