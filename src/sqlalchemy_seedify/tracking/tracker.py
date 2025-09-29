@@ -39,7 +39,7 @@ class SeederTracker:
         # This would typically be handled by a migration, but we provide
         # a method to create it programmatically if needed
         try:
-            from alembic_seeder.tracking.models import Base
+            from src.sqlalchemy_seedify.tracking.models import Base
 
             Base.metadata.create_all(bind=self.session.bind, checkfirst=True)
         except Exception as e:
