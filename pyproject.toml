@@ -60,7 +60,7 @@ Source = "https://github.com/sqlalchemy-seedify/sqlalchemy-seedify"
 sqlalchemy-seedify = "src.sqlalchemy_seedify.cli:main"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src"]
+packages = ["src/sqlalchemy_seedify"]
 
 [tool.ruff]
 line-length = 100
