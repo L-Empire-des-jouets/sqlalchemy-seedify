@@ -303,7 +303,7 @@ class EnvironmentManager:
         if environment not in self._environments:
             return False
 
-        config = self._environments[environment]
+        self._environments[environment]
 
         # Check for database connection if needed
         if not self.get_database_url(environment):

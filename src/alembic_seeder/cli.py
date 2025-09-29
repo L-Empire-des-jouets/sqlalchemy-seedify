@@ -195,7 +195,8 @@ def run(
     # Check for production confirmation
     if env_manager.is_production() and not dry_run:
         if not Confirm.ask(
-            "[bold red]You are about to run seeders in PRODUCTION. Continue?[/bold red]"
+            """[bold red]You are about to run seeders in PRODUCTION.
+            Continue?[/bold red]"""
         ):
             console.print("[yellow]Aborted.[/yellow]")
             return
@@ -203,7 +204,8 @@ def run(
     try:
         if fresh and not dry_run:
             if not Confirm.ask(
-                "[bold red]This will CLEAR seeder history and re-run all seeders. Continue?[/bold red]"
+                """[bold red]This will CLEAR seeder history and re-run all seeders.
+                Continue?[/bold red]"""
             ):
                 console.print("[yellow]Aborted.[/yellow]")
                 return
@@ -465,7 +467,7 @@ def list(ctx: click.Context) -> None:
     """List all available seeders."""
 
     config = ctx.obj["config"]
-    env_manager = ctx.obj["env_manager"]
+    ctx.obj["env_manager"]
 
     # Set up registry
     registry = SeederRegistry(seeders_path=config.seeders_path)
