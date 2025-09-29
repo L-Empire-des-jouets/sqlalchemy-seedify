@@ -9,7 +9,7 @@ import os
 from pathlib import Path
 from typing import Dict, List, Optional, Type
 
-from alembic_seeder.core.base_seeder import BaseSeeder
+from src.core.base_seeder import BaseSeeder
 
 logger = logging.getLogger(__name__)
 

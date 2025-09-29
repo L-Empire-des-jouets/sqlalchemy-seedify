@@ -13,10 +13,10 @@ from rich.table import Table
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from alembic_seeder.commands import init_command, make_command
-from alembic_seeder.core import SeederManager, SeederRegistry
-from alembic_seeder.tracking import SeederTracker
-from alembic_seeder.utils import Config, EnvironmentManager
+from .commands import init_command, make_command
+from .core import SeederManager, SeederRegistry
+from .tracking import SeederTracker
+from .utils import Config, EnvironmentManager
 
 logger = logging.getLogger(__name__)
 console = Console()

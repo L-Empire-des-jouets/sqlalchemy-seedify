@@ -10,10 +10,10 @@ from typing import Any, Dict, List, Optional
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
-from alembic_seeder.core.seeder_registry import SeederRegistry
-from alembic_seeder.tracking.hash import compute_seeder_content_hash
-from alembic_seeder.tracking.tracker import SeederTracker
-from alembic_seeder.utils.environment import EnvironmentManager
+from src.core.seeder_registry import SeederRegistry
+from ..tracking.hash import compute_seeder_content_hash
+from src.tracking.tracker import SeederTracker
+from src.utils.environment import EnvironmentManager
 
 logger = logging.getLogger(__name__)
 

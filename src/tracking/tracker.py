@@ -11,7 +11,7 @@ from sqlalchemy import desc, func
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
-from alembic_seeder.tracking.models import SeederRecord
+from src.tracking.models import SeederRecord
 
 logger = logging.getLogger(__name__)
 
