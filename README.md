@@ -21,23 +21,29 @@ A comprehensive seeder system for Alembic and SQLAlchemy, inspired by Laravel's 
 
 ## 📦 Installation
 
-### Using pip
+### Using pip (from GitHub)
 
 ```bash
-pip install L-Empire-des-jouets
+pip install "sqlalchemy-seedify @ git+https://github.com/L-Empire-des-jouets/sqlalchemy-seedify.git@main"
 ```
 
-### Using UV (recommended)
+### Using UV (recommended, from GitHub)
 
 ```bash
-uv add sqlalchemy-seedify
+uv add "sqlalchemy-seedify @ git+https://github.com/L-Empire-des-jouets/sqlalchemy-seedify.git@main"
 ```
 
-### With Alembic integration
+### With Alembic integration (extra)
 
 ```bash
-uv add sqlalchemy-seedify[alembic]
+# pip
+pip install "sqlalchemy-seedify[alembic] @ git+https://github.com/L-Empire-des-jouets/sqlalchemy-seedify.git@main"
+
+# uv
+uv add "sqlalchemy-seedify[alembic] @ git+https://github.com/L-Empire-des-jouets/sqlalchemy-seedify.git@main"
 ```
+
+Note: Replace `@main` with a release tag or commit hash for reproducible installs.
 
 ## 🚀 Quick Start
 
