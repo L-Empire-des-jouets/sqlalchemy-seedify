@@ -16,7 +16,7 @@ BASIC_TEMPLATE = '''"""
 {description}
 """
 
-from alembic_seeder import BaseSeeder
+from sqlalchemy_seedify import BaseSeeder
 
 
 class {class_name}(BaseSeeder):
@@ -24,7 +24,7 @@ class {class_name}(BaseSeeder):
 
     @classmethod
     def _get_metadata(cls):
-        from alembic_seeder.core.base_seeder import SeederMetadata
+        from sqlalchemy_seedify.core.base_seeder import SeederMetadata
         return SeederMetadata(
             name=cls.__name__,
             description="{description}",
@@ -74,7 +74,7 @@ FAKER_TEMPLATE = '''"""
 {description}
 """
 
-from alembic_seeder import BaseSeeder
+from sqlalchemy_seedify import BaseSeeder
 
 
 class {class_name}(BaseSeeder):
@@ -82,7 +82,7 @@ class {class_name}(BaseSeeder):
 
     @classmethod
     def _get_metadata(cls):
-        from alembic_seeder.core.base_seeder import SeederMetadata
+        from sqlalchemy_seedify.core.base_seeder import SeederMetadata
         return SeederMetadata(
             name=cls.__name__,
             description="{description}",
@@ -128,7 +128,7 @@ FACTORY_TEMPLATE = '''"""
 {description}
 """
 
-from alembic_seeder import BaseSeeder
+from sqlalchemy_seedify import BaseSeeder
 
 
 class {class_name}(BaseSeeder):
@@ -136,7 +136,7 @@ class {class_name}(BaseSeeder):
 
     @classmethod
     def _get_metadata(cls):
-        from alembic_seeder.core.base_seeder import SeederMetadata
+        from sqlalchemy_seedify.core.base_seeder import SeederMetadata
         return SeederMetadata(
             name=cls.__name__,
             description="{description}",
@@ -168,7 +168,7 @@ RELATION_TEMPLATE = '''"""
 {description}
 """
 
-from alembic_seeder import BaseSeeder
+from sqlalchemy_seedify import BaseSeeder
 
 
 class {class_name}(BaseSeeder):
@@ -176,7 +176,7 @@ class {class_name}(BaseSeeder):
 
     @classmethod
     def _get_metadata(cls):
-        from alembic_seeder.core.base_seeder import SeederMetadata
+        from sqlalchemy_seedify.core.base_seeder import SeederMetadata
         return SeederMetadata(
             name=cls.__name__,
             description="{description}",

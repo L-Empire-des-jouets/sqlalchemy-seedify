@@ -68,7 +68,7 @@ sqlalchemy-seedify make UserSeeder
 ### 3. Edit the seeder
 
 ```python
-from alembic_seeder import BaseSeeder
+from sqlalchemy_seedify import BaseSeeder
 from myapp.models import User
 
 class UserSeeder(BaseSeeder):
@@ -76,7 +76,7 @@ class UserSeeder(BaseSeeder):
     
     @classmethod
     def _get_metadata(cls):
-        from alembic_seeder.core.base_seeder import SeederMetadata
+        from sqlalchemy_seedify.core.base_seeder import SeederMetadata
         return SeederMetadata(
             name=cls.__name__,
             description="Seed initial users",
@@ -130,7 +130,7 @@ Create a `seeder.config.json` file:
   "seeders_path": "seeders",
   "default_environment": "development",
   "batch_size": 1000,
-  "tracking_table_name": "alembic_seeder_history",
+  "tracking_table_name": "sqlalchemy_seedify_history",
   "require_confirmation_prod": true,
   "log_level": "INFO"
 }
@@ -338,7 +338,7 @@ If Alembic is detected, the initialization command will:
 Add to your `alembic/env.py`:
 
 ```python
-from alembic_seeder.tracking.models import Base as SeederBase
+from sqlalchemy_seedify.tracking.models import Base as SeederBase
 
 # Include SeederBase in your metadata
 target_metadata = [Base.metadata, SeederBase.metadata]
@@ -366,7 +366,7 @@ sqlalchemy-seedify rollback --all && alembic downgrade -1
 
 ### Database Schema
 
-The tracking table (`alembic_seeder_history`) stores:
+The tracking table (`sqlalchemy_seedify_history`) stores:
 - Seeder name and environment
 - Execution timestamp and duration
 - Batch number

@@ -92,8 +92,8 @@ warn_unused_ignores = true
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["src"]
-addopts = "--cov=alembic_seeder --cov-report=term-missing"
+addopts = "--cov=sqlalchemy_seedify --cov-report=term-missing"
 
 [tool.coverage.run]
-source = ["src/alembic_seeder"]
+source = ["src/sqlalchemy_seedify"]
 omit = ["*/tests/*", "*/test_*.py"]

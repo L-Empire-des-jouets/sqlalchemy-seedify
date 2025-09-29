@@ -33,7 +33,7 @@ class SeederConfig(BaseModel):
     max_workers: int = 4
 
     # Tracking settings
-    tracking_table_name: str = "alembic_seeder_history"
+    tracking_table_name: str = "sqlalchemy_seedify_history"
     auto_create_tracking_table: bool = True
 
     # Safety settings

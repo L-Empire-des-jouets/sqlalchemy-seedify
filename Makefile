@@ -16,7 +16,7 @@ test: ## Run tests
 	pytest
 
 test-cov: ## Run tests with coverage
-	pytest --cov=alembic_seeder --cov-report=term-missing --cov-report=html
+	pytest --cov=sqlalchemy-seedify --cov-report=term-missing --cov-report=html
 
 lint: ## Run linters
 	ruff check src tests

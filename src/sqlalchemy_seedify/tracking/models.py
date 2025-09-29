@@ -18,7 +18,7 @@ class SeederRecord(Base):
     when they were executed, and in which environment.
     """
 
-    __tablename__ = "alembic_seeder_history"
+    __tablename__ = "sqlalchemy_seedify_history"
     __table_args__ = (UniqueConstraint("seeder_name", "environment", name="uq_seeder_env"),)
 
     id = Column(Integer, primary_key=True, autoincrement=True)

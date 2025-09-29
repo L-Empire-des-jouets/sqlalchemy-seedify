@@ -14,7 +14,7 @@ console = Console()
 ALEMBIC_ENV_TEMPLATE = """
 # Add this to your alembic/env.py file to integrate with sqlalchemy-seedify
 
-from alembic_seeder.tracking.models import Base as SeederBase
+from sqlalchemy_seedify.tracking.models import Base as SeederBase
 
 # Add SeederBase metadata to your target_metadata
 # Example:
@@ -27,7 +27,7 @@ SEEDER_CONFIG_TEMPLATE = """{
   "default_environment": "development",
   "auto_discover": true,
   "batch_size": 1000,
-  "tracking_table_name": "alembic_seeder_history",
+  "tracking_table_name": "sqlalchemy_seedify_history",
   "require_confirmation_prod": true,
   "log_level": "INFO"
 }
@@ -37,7 +37,7 @@ EXAMPLE_SEEDER_TEMPLATE = '''"""
 Example seeder for {name}.
 """
 
-from alembic_seeder import BaseSeeder
+from sqlalchemy_seedify import BaseSeeder
 
 
 class {name}(BaseSeeder):
@@ -45,7 +45,7 @@ class {name}(BaseSeeder):
 
     @classmethod
     def _get_metadata(cls):
-        from alembic_seeder.core.base_seeder import SeederMetadata
+        from sqlalchemy_seedify.core.base_seeder import SeederMetadata
         return SeederMetadata(
             name=cls.__name__,
             description="Example seeder for demonstration",
@@ -81,7 +81,7 @@ class {name}(BaseSeeder):
         print(f"Seeder {{self.name}} rolled back successfully!")
 '''
 
-MIGRATION_TEMPLATE = '''"""Create alembic_seeder_history table
+MIGRATION_TEMPLATE = '''"""Create sqlalchemy_seedify_history table
 
 Revision ID: {revision_id}
 Revises:
@@ -101,7 +101,7 @@ depends_on = None
 
 def upgrade():
     op.create_table(
-        'alembic_seeder_history',
+        'sqlalchemy_seedify_history',
         sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
         sa.Column('seeder_name', sa.String(length=255), nullable=False),
         sa.Column('environment', sa.String(length=50), nullable=False),
@@ -117,29 +117,29 @@ def upgrade():
         sa.UniqueConstraint('seeder_name', 'environment', name='uq_seeder_env')
     )
     op.create_index(
-        op.f('ix_alembic_seeder_history_batch'),
-        'alembic_seeder_history', ['batch'], unique=False)
+        op.f('ix_sqlalchemy_seedify_history_batch'),
+        'sqlalchemy_seedify_history', ['batch'], unique=False)
     op.create_index(
-        op.f('ix_alembic_seeder_history_environment'),
-        'alembic_seeder_history', ['environment'], unique=False)
+        op.f('ix_sqlalchemy_seedify_history_environment'),
+        'sqlalchemy_seedify_history', ['environment'], unique=False)
     op.create_index(
-        op.f('ix_alembic_seeder_history_seeder_name'),
-        'alembic_seeder_history', ['seeder_name'], unique=False)
+        op.f('ix_sqlalchemy_seedify_history_seeder_name'),
+        'sqlalchemy_seedify_history', ['seeder_name'], unique=False)
     op.create_index(
         op.f(
-            'ix_alembic_seeder_history_content_hash'),
-            'alembic_seeder_history', ['content_hash'], unique=False)
+            'ix_sqlalchemy_seedify_history_content_hash'),
+            'sqlalchemy_seedify_history', ['content_hash'], unique=False)
 
 
 def downgrade():
-    op.drop_index(op.f('ix_alembic_seeder_history_content_hash'),
-        table_name='alembic_seeder_history')
+    op.drop_index(op.f('ix_sqlalchemy_seedify_history_content_hash'),
+        table_name='sqlalchemy_seedify_history')
     op.drop_index(
-        op.f('ix_alembic_seeder_history_seeder_name'), table_name='alembic_seeder_history')
+        op.f('ix_sqlalchemy_seedify_history_seeder_name'), table_name='sqlalchemy_seedify_history')
     op.drop_index(
-        op.f('ix_alembic_seeder_history_environment'), table_name='alembic_seeder_history')
-    op.drop_index(op.f('ix_alembic_seeder_history_batch'), table_name='alembic_seeder_history')
-    op.drop_table('alembic_seeder_history')
+        op.f('ix_sqlalchemy_seedify_history_environment'), table_name='sqlalchemy_seedify_history')
+    op.drop_index(op.f('ix_sqlalchemy_seedify_history_batch'), table_name='sqlalchemy_seedify_history')
+    op.drop_table('sqlalchemy_seedify_history')
 '''
 
 

@@ -65,7 +65,7 @@ git checkout -b feature/your-feature-name
 4. **Run tests**:
 ```bash
 pytest
-pytest --cov=alembic_seeder  # With coverage
+pytest --cov=sqlalchemy-seedify  # With coverage
 ```
 
 5. **Format code**:
@@ -158,7 +158,7 @@ def example_function(param1: str, param2: int) -> bool:
 Example:
 ```python
 import pytest
-from alembic_seeder import BaseSeeder
+from sqlalchemy-seedify import BaseSeeder
 
 class TestBaseSeeder:
     """Test suite for BaseSeeder."""
