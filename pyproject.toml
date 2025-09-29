@@ -57,7 +57,7 @@ Issues = "https://github.com/sqlalchemy-seedify/sqlalchemy-seedify/issues"
 Source = "https://github.com/sqlalchemy-seedify/sqlalchemy-seedify"
 
 [project.scripts]
-sqlalchemy-seedify = "alembic_seeder.cli:main"
+sqlalchemy-seedify = "src.cli:main"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src"]
