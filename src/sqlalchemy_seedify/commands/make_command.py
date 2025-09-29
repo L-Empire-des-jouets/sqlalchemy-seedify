@@ -40,14 +40,14 @@ class {class_name}(BaseSeeder):
         # Example with upsert (idempotent insert-or-update):
         # from myapp.models import MyModel
         # rows = [
-        #     {"code": "value1", "label": "Label 1"},
-        #     {"code": "value2", "label": "Label 2"},
+        #     {{"code": "value1", "label": "Label 1"}},
+        #     {{"code": "value2", "label": "Label 2"}},
         # ]
         # for row in rows:
         #     self.upsert(
         #         model=MyModel,
-        #         where={"code": row["code"]},  # business key
-        #         values={"label": row["label"]},
+        #         where={{"code": row["code"]}},  # business key
+        #         values={{"label": row["label"]}},
         #         update_existing=True,
         #     )
 
@@ -107,12 +107,12 @@ class {class_name}(BaseSeeder):
         # from myapp.models import User
         # rows = []
         # for _ in range(100):
-        #     rows.append({
+        #     rows.append({{
         #         "email": fake.unique.email(),  # business key
         #         "name": fake.name(),
         #         "phone": fake.phone_number(),
         #         "address": fake.address(),
-        #     })
+        #     }})
         # self.bulk_upsert(
         #     model=User,
         #     rows=rows,
@@ -156,8 +156,8 @@ class {class_name}(BaseSeeder):
         # for user in users:
         #     self.upsert(
         #         model=User,
-        #         where={"email": user.email},
-        #         values={"name": user.name},
+        #         where={{"email": user.email}},
+        #         values={{"name": user.name}},
         #     )
 
         pass
@@ -190,15 +190,15 @@ class {class_name}(BaseSeeder):
         """Execute the seeder for relational data."""
         # Example with idempotent upserts across relations:
         # from myapp.models import User, Profile, Role, UserRole
-        # self.upsert(Role, {"name": "admin"}, {"description": "Administrator"})
-        # self.upsert(Role, {"name": "user"}, {"description": "User"})
+        # self.upsert(Role, {{"name": "admin"}}, {{"description": "Administrator"}})
+        # self.upsert(Role, {{"name": "user"}}, {{"description": "User"}})
         # users = self.session.query(User).all()
         # for user in users:
         #     # Profile by unique user_id
         #     self.upsert(
         #         Profile,
-        #         where={"user_id": user.id},
-        #         values={"bio": "Lorem ipsum..."},
+        #         where={{"user_id": user.id}},
+        #         values={{"bio": "Lorem ipsum..."}},
         #     )
         #     # N-N assignment via unique composite (user_id, role_id)
         #     role_name = "admin" if user.email.endswith("@admin.com") else "user"
@@ -206,8 +206,8 @@ class {class_name}(BaseSeeder):
         #     if role:
         #         self.upsert(
         #             UserRole,
-        #             where={"user_id": user.id, "role_id": role.id},
-        #             values={},
+        #             where={{"user_id": user.id, "role_id": role.id}},
+        #             values={{}},
         #             update_existing=False,
         #         )
 
